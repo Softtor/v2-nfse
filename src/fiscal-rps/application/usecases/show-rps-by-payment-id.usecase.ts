@@ -21,6 +21,7 @@ export namespace ShowRpsByPaymentIdUseCase {
       if (!rps) {
         return null;
       }
+      console.log('ShowRpsByPaymentIdUseCase', rps);
       return rps;
     }
   }

@@ -18,6 +18,8 @@ export class FiscalNfseModelMapper {
       takerId: model.taker_id,
       rpsId: model.rps_id,
       sentAt: model.sent_at ?? undefined,
+      base64Pdf: model.base64Pdf ?? undefined,
+      xml: model.xml ?? undefined,
       createdAt: model.created_at,
     };
 
@@ -41,6 +43,8 @@ export class FiscalNfseModelMapper {
       taker: { connect: { id: entity.takerId } },
       rps: { connect: { id: entity.rpsId } },
       sent_at: entity.sentAt ?? null,
+      base64Pdf: entity.base64Pdf ?? null,
+      xml: entity.xml ?? null,
       created_at: entity.createdAt,
     };
   }

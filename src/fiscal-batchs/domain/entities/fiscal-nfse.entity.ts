@@ -13,6 +13,8 @@ export interface FiscalNfseProps {
   takerId?: string;
   rpsId: string;
   sentAt?: Date;
+  base64Pdf?: string;
+  xml?: string;
   createdAt?: Date;
 }
 
@@ -78,5 +80,13 @@ export class FiscalNfseEntity extends Entity<FiscalNfseProps> {
 
   get createdAt() {
     return this.props.createdAt;
+  }
+
+  get base64Pdf() {
+    return this.props.base64Pdf;
+  }
+
+  get xml() {
+    return this.props.xml;
   }
 }
