@@ -149,4 +149,13 @@ export class FiscalRpsController {
       return { err: error.message, status: error.status };
     }
   }
+
+  @ApiOperation({ summary: 'Delete fiscal RPS' })
+  @MessagePattern('delete-rps')
+  async deleteRps(@Body() dto: { paymentId: string }) {
+    try {
+    } catch (error) {
+      return { err: error.message, status: error.status };
+    }
+  }
 }
