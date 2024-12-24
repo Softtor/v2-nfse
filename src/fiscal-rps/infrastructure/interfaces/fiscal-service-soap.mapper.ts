@@ -2,10 +2,13 @@ import { FiscalServiceEntity } from '@/fiscal-rps/domain/entities/fiscal-service
 import { ServiceInterface } from '@/nfse/domain/interfaces/common/service.interface';
 
 export class ServiceMapper {
-  static toSoapFormat(service: FiscalServiceEntity): ServiceInterface {
+  static toSoapFormat(
+    service: FiscalServiceEntity,
+    customValue?: number,
+  ): ServiceInterface {
     return {
       Valores: {
-        ValorServicos: service.serviceValue || 0.0,
+        ValorServicos: customValue ?? (service.serviceValue || 0.0),
         ValorDeducoes: service.deductionValue || 0.0,
         ValorPis: service.pisValue || 0.0,
         ValorCofins: service.cofinsValue || 0.0,

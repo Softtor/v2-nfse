@@ -145,6 +145,7 @@ export class FiscalRpsController {
       externalPlanCode: string;
       takerDocument: string;
       paymentId: string;
+      customValue: number;
     },
   ) {
     try {

@@ -23,7 +23,12 @@ export class RpsMapper {
             rpsData.loteRps.issueDateRps?.toISOString() ||
             new Date().toISOString(),
           Status: rpsData.loteRps.status,
-          Servico: ServiceMapper.toSoapFormat(rpsData.loteRps.service),
+          Servico: rpsData.loteRps.customValue
+            ? ServiceMapper.toSoapFormat(
+                rpsData.loteRps.service,
+                rpsData.loteRps.customValue,
+              )
+            : ServiceMapper.toSoapFormat(rpsData.loteRps.service),
           Prestador: ProviderMapper.toSoapFormat(rpsData.loteRps.provider),
           TomadorServico: TakerMapper.toSoapFormat(rpsData.loteRps.taker),
           Competencia:

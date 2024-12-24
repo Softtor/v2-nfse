@@ -13,6 +13,7 @@ export type FiscalRpsOutputDto = {
   takerId: string;
   providerId: string;
   batchId?: string;
+  customValue?: number;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -32,6 +33,7 @@ export class FiscalRpsOutputMapper {
       takerId: entity.takerId,
       providerId: entity.providerId,
       batchId: entity.batchId,
+      customValue: entity.customValue,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };

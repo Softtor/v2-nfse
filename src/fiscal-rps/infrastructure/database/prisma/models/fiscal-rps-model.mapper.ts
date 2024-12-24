@@ -44,6 +44,7 @@ export class FiscalRpsModelMapper {
       providerId: model.provider_id ?? undefined,
       batchId: model.batch_id ?? undefined,
       paymentId: model.payment_id ?? undefined,
+      customValue: model.custom_value ?? undefined,
       createdAt: model.created_at,
       updatedAt: model.updated_at,
     };
@@ -80,6 +81,7 @@ export class FiscalRpsModelMapper {
       service: { connect: { id: entity.serviceId } },
       taker: { connect: { id: entity.takerId } },
       provider: { connect: { id: entity.providerId } },
+      custom_value: entity.customValue ?? null,
       created_at: entity.createdAt,
       updated_at: entity.updatedAt,
     };

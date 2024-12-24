@@ -15,6 +15,7 @@ export interface FiscalRpsProps {
   providerId?: string;
   batchId?: string;
   paymentId?: string;
+  customValue?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -93,6 +94,14 @@ export class FiscalRpsEntity extends Entity<FiscalRpsProps> {
 
   get updatedAt() {
     return this.props.updatedAt;
+  }
+
+  get customValue() {
+    return this.props.customValue;
+  }
+
+  set customValue(value: number) {
+    this.props.customValue = value;
   }
 
   static validate(props: FiscalRpsProps) {

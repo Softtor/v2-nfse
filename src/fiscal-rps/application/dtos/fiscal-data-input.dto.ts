@@ -12,6 +12,7 @@ export class RpsDTO {
   takerId: string;
   providerId?: string;
   batchId?: string;
+  customValue?: number;
 }
 
 export class ServiceDTO {
