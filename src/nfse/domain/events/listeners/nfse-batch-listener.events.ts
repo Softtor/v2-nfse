@@ -35,7 +35,8 @@ export class NfseBatchListener {
       console.log('NFSe processada com sucesso', result);
 
       this.eventEmitter.emit('fiscal-nfse.create', result);
-
+      // todo - gerar PDF e XML
+      this.eventEmitter.emit('generate-nfse-archives', {});
       return result;
     } catch (error) {
       console.error('Erro ao consultar NFSe:', error);

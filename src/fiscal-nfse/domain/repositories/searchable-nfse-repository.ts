@@ -10,5 +10,6 @@ export namespace SearchableNfseRepository {
     search(input: SearchInput): Promise<FiscalNfseEntity[]>;
     searchByNumber(number: number): Promise<FiscalNfseEntity>;
     cancelNfse(number: number): Promise<void>;
+    update(id: string, data: Partial<FiscalNfseEntity>): Promise<void>;
   }
 }

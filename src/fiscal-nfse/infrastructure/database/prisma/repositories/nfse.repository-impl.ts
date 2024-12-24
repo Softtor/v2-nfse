@@ -7,6 +7,20 @@ import { NfseModelMapper } from '../models/nfse-model.mapper';
 @Injectable()
 export class NfseRepositoryImpl implements SearchableNfseRepository.Repository {
   constructor(private readonly prisma: PrismaService) {}
+  async update(id: string, data: Partial<FiscalNfseEntity>): Promise<void> {
+    try {
+      const nfse = await this.prisma.fiscalNfse.findUnique({ where: { id } });
+      await this.prisma.fiscalNfse.update({
+        where: { id },
+        data: {
+          ...nfse,
+          ...data,
+        },
+      });
+    } catch (err) {
+      throw new Error('Error updating NFSe');
+    }
+  }
 
   async search(
     input: SearchableNfseRepository.SearchInput,

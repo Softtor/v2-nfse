@@ -6,10 +6,14 @@ import { PrismaService } from '@/shared/prisma/prisma.service';
 import { CancelNfse } from '../application/usecases/cancel-nfse.usecase';
 import { ListNfses } from '../application/usecases/list-nfses.usecase';
 import { ShowNfseByNumber } from '../application/usecases/show-nfse-by-number.usecase';
+import { GenerateNfseArchivesListener } from '../application/events/generate-nfse-archives.event-listener';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
+  imports: [EventEmitterModule.forRoot()],
   controllers: [FiscalNfseController],
   providers: [
+    GenerateNfseArchivesListener,
     PrismaService,
     CancelNfse.UseCase,
     ListNfses.UseCase,
