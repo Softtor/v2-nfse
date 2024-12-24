@@ -8,6 +8,8 @@ import { ListNfses } from '../application/usecases/list-nfses.usecase';
 import { ShowNfseByNumber } from '../application/usecases/show-nfse-by-number.usecase';
 import { GenerateNfseArchivesListener } from '../application/events/generate-nfse-archives.event-listener';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ShowRpsByPaymentIdUseCase } from '@/fiscal-rps/application/usecases/show-rps-by-payment-id.usecase';
+import { FiscalRpsPrismaRepository } from '@/fiscal-rps/infrastructure/database/prisma/repositories/fiscal-rps-prisma.repository';
 
 @Module({
   imports: [EventEmitterModule.forRoot()],
@@ -18,9 +20,17 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     CancelNfse.UseCase,
     ListNfses.UseCase,
     ShowNfseByNumber.UseCase,
+    ShowRpsByPaymentIdUseCase.UseCase,
     {
       provide: 'SearchableNfseRepository',
       useClass: NfseRepositoryImpl,
+    },
+    {
+      provide: 'FiscalRpsPrismaRepository',
+      useFactory: (prismaService: PrismaService) => {
+        return new FiscalRpsPrismaRepository(prismaService);
+      },
+      inject: [PrismaService],
     },
   ],
 })

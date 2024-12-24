@@ -3,14 +3,18 @@ import { ListNfses } from '@/fiscal-nfse/application/usecases/list-nfses.usecase
 import { ShowNfseByNumber } from '@/fiscal-nfse/application/usecases/show-nfse-by-number.usecase';
 import { ShowRpsByPaymentIdUseCase } from '@/fiscal-rps/application/usecases/show-rps-by-payment-id.usecase';
 import { CancelNfseInput } from '@/nfse/domain/interfaces/cancel-nfse.interface';
-import { Controller } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class FiscalNfseController {
+  @Inject(ListNfses.UseCase)
   private listNfsesUseCase: ListNfses.UseCase;
+  @Inject(ShowNfseByNumber.UseCase)
   private showNfseByNumberUseCase: ShowNfseByNumber.UseCase;
+  @Inject(CancelNfse.UseCase)
   private cancelNfseUseCase: CancelNfse.UseCase;
+  @Inject(ShowRpsByPaymentIdUseCase.UseCase)
   private showRpsByPaymentId: ShowRpsByPaymentIdUseCase.UseCase;
 
   @MessagePattern('find-all-nfses')
