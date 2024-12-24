@@ -41,8 +41,3 @@ docker run -d --hostname my-rabbit --name some-rabbit \
 ### Interfaces para consumo do microsserviço
 
 ## O CMD é a queue . metódo, ao enviar o CMD para a queue, deve considerar somente o metódo de envio; A queue é apenas para documentar a fila que o microsserviço escuta;
-
-  - [4.1.n]: Emitir nota fiscal cmd -> `issue_fiscal_note`
-  - [4.2.n]: Consultar nota fiscal cmd -> `fetch_fiscal_note` [Id da nota]
-  - [4.3.n]: Cancelar nota fiscal cmd -> `cancel_fiscal_note` [Id da nota]
-  - [4.4.n]: Listar notas fiscais cmd -> `list_fiscal_notes`
