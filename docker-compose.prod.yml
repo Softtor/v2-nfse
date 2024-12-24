@@ -9,8 +9,8 @@ services:
       - default
   database:
     image: mariadb:10.5
-    ports:
-      - "${FORWARD_DATABASE_PORT-3306}:3306"
+    expose:
+      - 3306
     environment:
       MARIADB_ROOT_PASSWORD: "${DATABASE_PASSWORD-root}"
       MARIADB_DATABASE: "${DATABASE_NAME-nfse_curitiba}"
