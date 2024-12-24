@@ -1,0 +1,225 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum nf_type {
+  RPS          @map("1")
+  NF_CONJUGADA @map("2")
+  CUPOM        @map("3")
+}
+
+enum nf_status {
+  NORMAL    @map("1")
+  CANCELADO @map("2")
+}
+
+enum taxation_regime {
+  MICROEMPRESA_MUNICIPAL     @map("1")
+  ESTIMATIVA                 @map("2")
+  SOCIEDADE_DE_PROFISSIONAIS @map("3")
+  COOPERATIVA                @map("4")
+  MEI                        @map("5")
+  ME_EPP                     @map("6")
+}
+
+model FiscalRps {
+  id                        String    @id @default(uuid())
+  number                    Int
+  series                    String    @db.VarChar(5)
+  issue_date_rps            DateTime?
+  type                      nf_type
+  status                    nf_status
+  competence                DateTime? @db.Date
+  complementary_information String?
+  service_id                String
+  taker_id                  String
+  provider_id               String?
+  batch_id                  String?
+  service_description       String?
+  cnae_code                 Int?
+  activity_code             String?
+  created_at                DateTime  @default(now())
+  updated_at                DateTime  @updatedAt
+
+  service    FiscalService    @relation(fields: [service_id], references: [id])
+  taker      FiscalTaker      @relation(fields: [taker_id], references: [id])
+  provider   FiscalProvider?  @relation(fields: [provider_id], references: [id])
+  batch      FiscalBatchNfse? @relation(fields: [batch_id], references: [id])
+  FiscalNfse FiscalNfse[]
+
+  @@map("fiscal_rps")
+}
+
+model FiscalNfse {
+  id                String          @id @default(uuid())
+  number            Int             @unique
+  verification_code String          @db.VarChar(50)
+  issue_date        DateTime
+  rps_number        String          @db.VarChar(50)
+  rps_issue_date    DateTime
+  competence        DateTime
+  provider_id       String?         @db.VarChar(50)
+  taker_id          String?         @db.VarChar(50)
+  rps_id            String          @db.VarChar(50)
+  sent_at           DateTime?
+  created_at        DateTime        @default(now())
+  xml               String?         @db.Text
+  base64Pdf         String?         @db.Text
+  provider          FiscalProvider? @relation(fields: [provider_id], references: [id])
+  taker             FiscalTaker?    @relation(fields: [taker_id], references: [id])
+  rps               FiscalRps       @relation(fields: [rps_id], references: [id])
+
+  @@map("fiscal_nfse")
+}
+
+model FiscalService {
+  id                      String  @id @default(uuid())
+  service_value           Float
+  deduction_value         Float
+  pis_value               Float
+  cofins_value            Float?
+  inss_value              Float?
+  ir_value                Float?
+  csll_value              Float?
+  other_retentions        Float?
+  total_tributes_value    Float?
+  iss_value               Float?
+  rate                    Float?
+  nbs_code                String?
+  unconditional_discount  Float
+  conditional_discount    Float
+  iss_withheld            Int
+  service_item_list       String
+  cnae_code               String
+  municipal_taxation_code String
+  service_description     String
+  municipality_code       String
+  iss_exigibility         Int
+  incidence_municipality  String
+  external_plan_code      String?
+
+  created_at DateTime    @default(now())
+  FiscalRps  FiscalRps[]
+
+  @@map("fiscal_services")
+}
+
+model FiscalTaker {
+  id           String   @id @default(uuid())
+  document     String
+  name         String
+  address      String
+  number       String
+  complement   String?
+  neighborhood String
+  city_code    String
+  state        String
+  zip_code     String
+  is_foreign   Boolean  @default(false)
+  country_code String?
+  phone        String?
+  email        String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  nfse      FiscalNfse[]
+  FiscalRps FiscalRps[]
+
+  @@map("fiscal_takers")
+}
+
+model FiscalProvider {
+  id                     String   @id @default(uuid())
+  cnpj                   String   @unique
+  cpf                    String?
+  municipal_subscription String?
+  emitter_id             Int
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  emitter    FiscalEmitter     @relation(fields: [emitter_id], references: [id])
+  batches    FiscalBatchNfse[]
+  FiscalRps  FiscalRps[]
+  FiscalNfse FiscalNfse[]
+
+  @@map("fiscal_providers")
+}
+
+model FiscalBatchNfse {
+  id                String    @id @default(uuid())
+  name              Int       @unique @default(autoincrement())
+  sent_at           DateTime?
+  protocol          String?
+  receipt_date      DateTime?
+  batch_number      String?
+  provider_id       String
+  confirmed_send_ws Boolean?  @default(false)
+  created_at        DateTime  @default(now())
+
+  provider  FiscalProvider @relation(fields: [provider_id], references: [id])
+  FiscalRps FiscalRps[]
+
+  @@map("fiscal_batchs_rps")
+}
+
+model FiscalEmitter {
+  id                      Int              @id @default(autoincrement())
+  name                    String
+  document                String           @unique
+  email                   String?
+  phone                   String?
+  nickname                String?
+  address                 String
+  number                  String
+  complement              String?
+  neighborhood            String?
+  municipality_code       String?
+  city                    String?
+  state                   String?
+  postal_code             String?
+  crt                     String?
+  ie                      String?
+  im                      String?
+  cnae_code               String?
+  activity_code           String?
+  aliquot                 Float?
+  iss                     Float?
+  cofins                  Float?
+  csll                    Float?
+  inss                    Float?
+  ir                      Float?
+  pis                     Float?
+  iss_withheld            Int?
+  service_item_list       String?
+  municipal_taxation_code String?
+  iss_eligibility         Int?
+  created_at              DateTime         @default(now())
+  updated_at              DateTime         @updatedAt
+  FiscalProvider          FiscalProvider[]
+  FiscalNfConfig          FiscalNfConfig[]
+
+  @@map("fiscal_emitters")
+}
+
+model FiscalNfConfig {
+  id                   String          @id @default(uuid())
+  serie                String
+  next_document_number Int
+  simple_national      Boolean?        @default(false)
+  taxation_regime      taxation_regime
+  operation_nature     String?
+  cultural_incentive   Boolean?        @default(false)
+  fiscal_incentive     Boolean?        @default(false)
+  emitter_id           Int             @unique
+  created_at           DateTime        @default(now())
+  updated_at           DateTime        @updatedAt
+
+  emitter FiscalEmitter @relation(fields: [emitter_id], references: [id])
+
+  @@map("fiscal_nf_configs")
+}

@@ -1,0 +1,49 @@
+services:
+  backend:
+    build:
+      context: .
+      target: development
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - '${FORWARD_APP_PORT-4000}:4000'
+    depends_on:
+      - database
+    volumes:
+      - .:/usr/src
+    networks:
+      - default
+
+  database:
+    image: mariadb:10.5
+    ports:
+      - '${FORWARD_DATABASE_PORT-3306}:3306'
+    environment:
+      MARIADB_ROOT_PASSWORD: '${DATABASE_PASSWORD-root}'
+      MARIADB_DATABASE: '${DATABASE_NAME-nfse_curitiba}'
+      MARIADB_USER: '${DATABASE_USER-nfse_curitiba}'
+    networks:
+      - default
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - '${FORWARD_PHPMYADMIN_PORT-8080}:80'
+    environment:
+      PMA_HOST: database
+      PMA_USER: '${DATABASE_USER-nfse_curitiba}'
+      PMA_PASSWORD: '${DATABASE_PASSWORD-root}'
+    depends_on:
+      - database
+    networks:
+      - default
+
+volumes:
+  mariadb_data:
+
+networks:
+  default:
+    driver: bridge

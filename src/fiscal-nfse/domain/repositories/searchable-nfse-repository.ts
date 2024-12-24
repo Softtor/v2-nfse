@@ -1,0 +1,14 @@
+import { FiscalNfseEntity } from '../entities/fiscal-nfse.entity';
+
+export namespace SearchableNfseRepository {
+  export type SearchInput = {
+    page?: number;
+    perPage?: number;
+  };
+
+  export interface Repository {
+    search(input: SearchInput): Promise<FiscalNfseEntity[]>;
+    searchByNumber(number: number): Promise<FiscalNfseEntity>;
+    cancelNfse(number: number): Promise<void>;
+  }
+}
