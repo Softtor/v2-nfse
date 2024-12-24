@@ -43,6 +43,7 @@ export class FiscalRpsModelMapper {
       takerId: model.taker_id,
       providerId: model.provider_id ?? undefined,
       batchId: model.batch_id ?? undefined,
+      paymentId: model.payment_id ?? undefined,
       createdAt: model.created_at,
       updatedAt: model.updated_at,
     };
@@ -73,6 +74,7 @@ export class FiscalRpsModelMapper {
       issue_date_rps: entity.issueDateRps ?? null,
       type: typeEnum,
       status: statusEnum,
+      payment_id: entity.paymentId ?? null,
       competence: entity.competence ?? null,
       complementary_information: entity.complementaryInformation ?? null,
       service: { connect: { id: entity.serviceId } },

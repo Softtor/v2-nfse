@@ -1,3 +1,4 @@
+import { FiscalNfseEntity } from '@/fiscal-batchs/domain/entities/fiscal-nfse.entity';
 import { FiscalRpsEntity } from '../entities/fiscal-rps.entity';
 
 export interface FiscalRpsRepository {
@@ -9,4 +10,6 @@ export interface FiscalRpsRepository {
   findAll(batchId: string): Promise<FiscalRpsEntity[]>;
   deleteByPaymentId(paymentId: string): Promise<void>;
   findByNumber(number: string): Promise<FiscalRpsEntity>;
+  findByPaymentId(paymentId: string): Promise<FiscalRpsEntity>;
+  findNfseByRpsPaymentId(paymentId: string): Promise<FiscalNfseEntity | null>;
 }

@@ -25,6 +25,8 @@ import { EnvConfigService } from '@/shared/infrastructure/env-config/env-config.
 import { DeleteFiscalRpsUseCase } from './application/usecases/delete-fiscal-rps.usecase';
 import { ConfigService } from '@nestjs/config';
 import { GetRpsByIdUseCase } from './application/usecases/get-fiscal-rps-by-number.usecase';
+import { ShowRpsByPaymentIdUseCase } from './application/usecases/show-rps-by-payment-id.usecase';
+
 @Module({
   imports: [EventEmitterModule.forRoot()],
   controllers: [FiscalRpsController],
@@ -185,6 +187,7 @@ import { GetRpsByIdUseCase } from './application/usecases/get-fiscal-rps-by-numb
       inject: ['FiscalRpsPrismaRepository'],
     },
     DeleteFiscalRpsUseCase.UseCase,
+    ShowRpsByPaymentIdUseCase.UseCase,
   ],
   exports: [FiscalRpsListener],
 })

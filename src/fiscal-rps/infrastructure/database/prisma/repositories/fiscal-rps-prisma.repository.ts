@@ -4,9 +4,28 @@ import { FiscalRpsEntity } from '@/fiscal-rps/domain/entities/fiscal-rps.entity'
 import { FiscalRpsModelMapper } from '../models/fiscal-rps-model.mapper';
 import { PrismaService } from '@/shared/prisma/prisma.service';
 import { BadRequestError } from '@/shared/domain/errors/bad-request-error';
+import { FiscalNfseEntity } from '@/fiscal-batchs/domain/entities/fiscal-nfse.entity';
+import { FiscalNfseModelMapper } from '@/fiscal-batchs/infrastructure/database/prisma/models/fiscal-nfse-model.mapper';
 
 export class FiscalRpsPrismaRepository implements FiscalRpsRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async findNfseByRpsPaymentId(
+    paymentId: string,
+  ): Promise<FiscalNfseEntity | null> {
+    const result = await this.prismaService.fiscalRps.findFirst({
+      where: { payment_id: paymentId },
+      include: { FiscalNfse: true },
+    });
+    if (!result) return null;
+    return FiscalNfseModelMapper.toEntity(result.FiscalNfse[0]);
+  }
+  async findByPaymentId(paymentId: string): Promise<FiscalRpsEntity> {
+    return FiscalRpsModelMapper.toEntity(
+      await this.prismaService.fiscalRps.findFirst({
+        where: { payment_id: paymentId },
+      }),
+    );
+  }
   async deleteByPaymentId(paymentId: string): Promise<void> {
     this.prismaService.fiscalRps.deleteMany({
       where: { payment_id: paymentId },

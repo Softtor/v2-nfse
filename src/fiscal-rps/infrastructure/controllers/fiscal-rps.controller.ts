@@ -21,6 +21,7 @@ import { UpdateFiscalTakerUseCase } from '@/fiscal-rps/application/usecases/upda
 import { DeleteFiscalTakerUseCase } from '@/fiscal-rps/application/usecases/delete-fiscal-taker.usecase';
 import { CreateFiscalRpsUseCase } from '@/fiscal-rps/application/usecases/create-fiscal-rps.usecase';
 import { DeleteFiscalRpsUseCase } from '@/fiscal-rps/application/usecases/delete-fiscal-rps.usecase';
+import { ShowRpsByPaymentIdUseCase } from '@/fiscal-rps/application/usecases/show-rps-by-payment-id.usecase';
 
 @ApiTags('fiscal-rps')
 @Controller()
@@ -35,6 +36,7 @@ export class FiscalRpsController {
     private readonly deleteFiscalServiceUseCase: DeleteFiscalServiceUseCase,
     private readonly createFiscalRpsUseCase: CreateFiscalRpsUseCase,
     private readonly deleteFiscalRpsUseCase: DeleteFiscalRpsUseCase.UseCase,
+    private readonly showRpsByPaymentIdUseCase: ShowRpsByPaymentIdUseCase.UseCase,
   ) {}
 
   @ApiOperation({ summary: 'Create a new Fiscal Taker' })
@@ -157,6 +159,16 @@ export class FiscalRpsController {
   async deleteRps(@Body() dto: { paymentId: string }) {
     try {
       return await this.deleteFiscalRpsUseCase.execute(dto);
+    } catch (error) {
+      return { err: error.message, status: error.status };
+    }
+  }
+
+  @ApiOperation({ summary: 'Show fiscal RPS' })
+  @MessagePattern('show-rps-by-payment-id')
+  async showRpsByPaymentId(@Body() dto: { paymentId: string }) {
+    try {
+      return await this.showRpsByPaymentIdUseCase.execute(dto);
     } catch (error) {
       return { err: error.message, status: error.status };
     }
