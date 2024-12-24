@@ -13,6 +13,7 @@ export async function seedFiscalProvider() {
         updated_at: new Date(),
       },
       create: {
+        id: '8bd07093-7231-4f12-96fe-f450f409bf0d',
         cnpj: '46.204.900/0001-51',
         municipal_subscription: '010112006414',
         emitter: { connect: { id: 1 } },

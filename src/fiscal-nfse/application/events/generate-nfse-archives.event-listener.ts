@@ -10,7 +10,6 @@ export class GenerateNfseArchivesListener {
   @OnEvent('generate-nfse-archives')
   async handle(data: { number: string; pdf: string; xml: string }) {
     const nfse = await this.nfseRepository.searchByNumber(Number(data.number));
-
     if (!nfse) {
       throw new Error('NFSe not found');
     }

@@ -108,7 +108,6 @@ export namespace CuritibaRepositoryImpl {
           throw new Error('Erro ao enviar lote de RPS');
         }
 
-        // return this.getResponse(response);
         // const response = {
         //   ok: true,
         //   RecepcionarLoteRpsResult: {

@@ -19,16 +19,25 @@ export class SendEmailListener {
   }) {
     try {
       await this.fiscalNoteService.generateAndSendEmail(data);
-      const pdf = await this.fiscalNoteService.generatePdfToBase64(data.rps);
-      const xml = await this.fiscalNoteService.generateXml(data.rps);
-      this.eventEmitter.emit('generate-nfse-archives', {
-        number: data.rps.ConsultarNfsePorRpsResult.CompNfse.Nfse.InfNfse.Numero,
-        pdf,
-        xml,
-      });
     } catch (error) {
       console.error('Erro ao enviar email:', error);
       throw new BadRequestError('Erro ao enviar email: ' + error);
+    }
+  }
+
+  @OnEvent('send-email.convert-files')
+  async handlerConvertFilesEvent(data: { rps: NfseResponse }) {
+    try {
+      const pdf = await this.fiscalNoteService.generatePdfToBase64(data.rps);
+      const xml = await this.fiscalNoteService.generateXml(data.rps);
+
+      return {
+        pdf,
+        xml,
+      };
+    } catch (error) {
+      console.error('Erro ao converter arquivos:', error);
+      throw new BadRequestError('Erro ao converter arquivos: ' + error);
     }
   }
 }

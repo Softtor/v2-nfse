@@ -6,4 +6,4 @@
 */
 -- AlterTable
 ALTER TABLE `fiscal_nfse` DROP COLUMN `pdf`,
-    ADD COLUMN `base64Pdf` TEXT NULL;
+    ADD COLUMN `base64Pdf` LONGTEXT NULL;

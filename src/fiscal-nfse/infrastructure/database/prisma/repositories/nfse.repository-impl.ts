@@ -37,7 +37,7 @@ export class NfseRepositoryImpl implements SearchableNfseRepository.Repository {
         },
       });
     } catch (err) {
-      throw new Error('Error updating NFSe');
+      throw new Error('Error updating NFSe' + err);
     }
   }
 
