@@ -53,6 +53,8 @@ RUN npm install --production
 
 COPY . .
 
+RUN npm run build
+
 # Stage 3 - Produção
 FROM base AS production
 
