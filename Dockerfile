@@ -54,7 +54,6 @@ FROM base AS production
 
 ENV NODE_ENV=production
 
-COPY --from=builder /usr/src/dist ./dist
 COPY --from=builder /usr/src/package.json ./package.json
 COPY --from=builder /usr/src/tsconfig.json ./tsconfig.json
 COPY --from=builder /usr/src/node_modules ./node_modules
