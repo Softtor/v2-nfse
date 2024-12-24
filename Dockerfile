@@ -58,6 +58,8 @@ COPY --from=builder /usr/src/package.json ./package.json
 COPY --from=builder /usr/src/tsconfig.json ./tsconfig.json
 COPY --from=builder /usr/src/node_modules ./node_modules
 
+RUN npm run build
+
 RUN addgroup --gid 1001 --system nestjs \
   && adduser --system --uid 1001 nestjs
 USER nestjs

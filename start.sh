@@ -17,6 +17,5 @@ npm run seed
 if [ "$NODE_ENV" = "development" ]; then
   npm run start:dev
 else
-  npm run build
-  npm run start
+  npm run start:prod
 fi
