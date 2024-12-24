@@ -42,9 +42,10 @@ export class FiscalNfseController {
   }
 
   @MessagePattern('find-by-payment-id')
-  findByPaymentId(@Payload() paymentId: string) {
+  findByPaymentId(@Payload() paymentId: any) {
+    console.log('find-by-payment-id --->', paymentId);
     try {
-      return this.showRpsByPaymentId.execute({ paymentId });
+      return this.showRpsByPaymentId.execute(paymentId);
     } catch (err) {
       return { status: 'error', message: err.message };
     }
