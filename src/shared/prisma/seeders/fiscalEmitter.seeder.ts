@@ -32,7 +32,7 @@ export async function seedFiscalEmitter() {
         ir: 0.0,
         pis: 0.0,
         iss_withheld: 2,
-        service_item_list: '107',
+        service_item_list: '1.07',
         municipal_taxation_code: '0107',
         iss_eligibility: 0,
         updated_at: new Date(),
