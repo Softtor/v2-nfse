@@ -13,13 +13,18 @@ export class NfseRepositoryImpl implements SearchableNfseRepository.Repository {
   async searchWithTaker(
     input: SearchableNfseRepository.SearchInput,
   ): Promise<{ nfse: FiscalNfseEntity; taker: FiscalTakerEntity }[]> {
+    const page = input.page || 1;
+    const limit = input.limit || 10;
+    const skip = (page - 1) * limit;
+
     const result = await this.prisma.fiscalNfse.findMany({
-      skip: input.page,
-      take: input.perPage,
+      skip,
+      take: limit,
       include: {
         taker: true,
       },
     });
+    console.log(result, input);
     return result.map((item) => ({
       nfse: NfseModelMapper.toEntity(item),
       taker: FiscalTakerModelMapper.toEntity(item.taker),
@@ -44,10 +49,12 @@ export class NfseRepositoryImpl implements SearchableNfseRepository.Repository {
   async search(
     input: SearchableNfseRepository.SearchInput,
   ): Promise<FiscalNfseEntity[]> {
-    const { page, perPage } = input;
+    const page = input.page || 1;
+    const limit = input.limit || 10;
+    const skip = (page - 1) * limit;
     const prismaResult = await this.prisma.fiscalNfse.findMany({
-      skip: page * perPage,
-      take: perPage,
+      skip,
+      take: limit,
     });
     return prismaResult.map(NfseModelMapper.toEntity);
   }

@@ -4,7 +4,7 @@ import { FiscalNfseEntity } from '../entities/fiscal-nfse.entity';
 export namespace SearchableNfseRepository {
   export type SearchInput = {
     page?: number;
-    perPage?: number;
+    limit?: number;
   };
 
   export interface Repository {
