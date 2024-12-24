@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { createPrismaMock } from '@/shared/prisma/__mocks__/prisma.service.mock';
+import { createPrismaMock } from '@/shared/prisma/__tests__/__mocks__/prisma.service.mock';
 import { FiscalNfConfigEntity } from '@/fiscal-nf-config/domain/entities/fiscal-nf-config.entity';
 import { NotFoundError } from '@/shared/domain/errors/not-found-error';
 import { FiscalNfConfigPrismaRepository } from '../../fiscal-nf-config-prisma.repository';

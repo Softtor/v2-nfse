@@ -50,25 +50,25 @@ ENV NODE_ENV=production
 
 COPY package*.json ./
 
-RUN npm install --production
-
-RUN npx prisma generate
-
 COPY . .
 
-RUN npm run build
+RUN npm install 
+
+RUN npm run prisma:generate
+
+RUN npm run build 
 
 # Stage 3 - Produção
 FROM base AS production
 
 ENV NODE_ENV=production
 
-COPY --from=builder /usr/src/dist ./dist
 COPY --from=builder /usr/src/package.json ./package.json
 COPY --from=builder /usr/src/tsconfig.json ./tsconfig.json
 COPY --from=builder /usr/src/node_modules ./node_modules
-
-RUN npm run build
+COPY --from=builder /usr/src/prisma ./prisma
+COPY --from=builder /usr/src/dist ./dist
+COPY --from=builder /usr/src/.env ./.env.production.local
 
 RUN addgroup --gid 1001 --system nestjs \
   && adduser --system --uid 1001 nestjs
@@ -76,7 +76,7 @@ USER nestjs
 
 EXPOSE 4000
 
-CMD ["/usr/local/bin/start.sh"]
+ENTRYPOINT ["node", "dist/src/main"]
 
 # Stage 4 - Desenvolvimento
 FROM base AS development

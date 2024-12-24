@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { createPrismaMock } from '@/shared/prisma/__mocks__/prisma.service.mock';
+import { createPrismaMock } from '@/shared/prisma/__tests__/__mocks__/prisma.service.mock';
 import { FiscalEmitterPrismaRepository } from '../../fiscal-emitter-prisma.repository';
 import { NotFoundError } from '@/shared/domain/errors/not-found-error';
 import { FiscalEmitterEntity } from '@/fiscal-emitter/domain/entities/fiscal-emitter.entity';
