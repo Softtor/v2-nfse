@@ -3,10 +3,29 @@ import { FiscalNfseEntity } from '@/fiscal-nfse/domain/entities/fiscal-nfse.enti
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/shared/prisma/prisma.service';
 import { NfseModelMapper } from '../models/nfse-model.mapper';
+import { FiscalTakerEntity } from '@/fiscal-rps/domain/entities/fiscal-taker.entity';
+import { FiscalTakerModelMapper } from '@/fiscal-rps/infrastructure/database/prisma/models/fiscal-taker-model.mapper';
 
 @Injectable()
 export class NfseRepositoryImpl implements SearchableNfseRepository.Repository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async searchWithTaker(
+    input: SearchableNfseRepository.SearchInput,
+  ): Promise<{ nfse: FiscalNfseEntity; taker: FiscalTakerEntity }[]> {
+    const result = await this.prisma.fiscalNfse.findMany({
+      skip: input.page,
+      take: input.perPage,
+      include: {
+        taker: true,
+      },
+    });
+    return result.map((item) => ({
+      nfse: NfseModelMapper.toEntity(item),
+      taker: FiscalTakerModelMapper.toEntity(item.taker),
+    }));
+  }
+
   async update(id: string, data: Partial<FiscalNfseEntity>): Promise<void> {
     try {
       const nfse = await this.prisma.fiscalNfse.findUnique({ where: { id } });
