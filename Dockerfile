@@ -49,7 +49,10 @@ FROM base AS builder
 ENV NODE_ENV=production
 
 COPY package*.json ./
-RUN npm install
+
+RUN npm install --production
+
+RUN npx prisma generate
 
 COPY . .
 
