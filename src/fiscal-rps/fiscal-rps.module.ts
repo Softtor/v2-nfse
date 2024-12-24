@@ -22,7 +22,7 @@ import { FindAllFiscalRpsUseCase } from './application/usecases/get-fiscal-rps.u
 import { GetServiceByIdUseCase } from './application/usecases/get-fiscal-service-id.usecase';
 import { GetTakerByIdUseCase } from './application/usecases/get-fiscal-taker-byId.usecase';
 import { EnvConfigService } from '@/shared/infrastructure/env-config/env-config.service';
-
+import { DeleteFiscalRpsUseCase } from './application/usecases/delete-fiscal-rps.usecase';
 import { ConfigService } from '@nestjs/config';
 import { GetRpsByIdUseCase } from './application/usecases/get-fiscal-rps-by-number.usecase';
 @Module({
@@ -184,6 +184,7 @@ import { GetRpsByIdUseCase } from './application/usecases/get-fiscal-rps-by-numb
       },
       inject: ['FiscalRpsPrismaRepository'],
     },
+    DeleteFiscalRpsUseCase.UseCase,
   ],
   exports: [FiscalRpsListener],
 })

@@ -9,7 +9,7 @@ export namespace DeleteFiscalRpsUseCase {
   export type Output = void;
 
   export class UseCase implements UseCaseContract<Input, Output> {
-    @Inject('FiscalRpsRepository')
+    @Inject('FiscalRpsPrismaRepository')
     private readonly fiscalRpsRepository: FiscalRpsRepository;
     async execute(input: Input): Promise<void> {
       this.fiscalRpsRepository.deleteByPaymentId(input.paymentId);
