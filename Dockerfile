@@ -49,7 +49,7 @@ FROM base AS builder
 ENV NODE_ENV=production
 
 COPY package*.json ./
-RUN npm install --production
+RUN npm install
 
 COPY . .
 
