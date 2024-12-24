@@ -32,6 +32,8 @@ RUN apt-get update -y \
 
 RUN curl -fsSL https://bun.sh/install | bash
 
+RUN npm install -g @nestjs/cli
+
 # Adicionar o caminho do Chromium ao PATH
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
