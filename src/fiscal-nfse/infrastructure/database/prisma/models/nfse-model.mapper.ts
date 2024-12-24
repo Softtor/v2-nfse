@@ -18,6 +18,8 @@ export class NfseModelMapper {
       createdAt: model.created_at,
       providerId: model.provider_id,
       takerId: model.taker_id,
+      xml: model.xml,
+      base64Pdf: model.base64Pdf,
     };
     return new FiscalNfseEntity(props, model.id);
   }
