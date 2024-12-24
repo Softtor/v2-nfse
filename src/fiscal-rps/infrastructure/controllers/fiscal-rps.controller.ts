@@ -20,6 +20,7 @@ import { CreateFiscalTakerUseCase } from '@/fiscal-rps/application/usecases/crea
 import { UpdateFiscalTakerUseCase } from '@/fiscal-rps/application/usecases/update-fiscal-taker.usecase';
 import { DeleteFiscalTakerUseCase } from '@/fiscal-rps/application/usecases/delete-fiscal-taker.usecase';
 import { CreateFiscalRpsUseCase } from '@/fiscal-rps/application/usecases/create-fiscal-rps.usecase';
+import { DeleteFiscalRpsUseCase } from '@/fiscal-rps/application/usecases/delete-fiscal-rps.usecase';
 
 @ApiTags('fiscal-rps')
 @Controller()
@@ -33,6 +34,7 @@ export class FiscalRpsController {
     private readonly updateFiscalServiceUseCase: UpdateFiscalServiceUseCase,
     private readonly deleteFiscalServiceUseCase: DeleteFiscalServiceUseCase,
     private readonly createFiscalRpsUseCase: CreateFiscalRpsUseCase,
+    private readonly deleteFiscalRpsUseCase: DeleteFiscalRpsUseCase.UseCase,
   ) {}
 
   @ApiOperation({ summary: 'Create a new Fiscal Taker' })
@@ -154,6 +156,7 @@ export class FiscalRpsController {
   @MessagePattern('delete-rps')
   async deleteRps(@Body() dto: { paymentId: string }) {
     try {
+      return await this.deleteFiscalRpsUseCase.execute(dto);
     } catch (error) {
       return { err: error.message, status: error.status };
     }

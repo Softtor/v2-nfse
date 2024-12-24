@@ -7,5 +7,6 @@ export interface FiscalRpsRepository {
   delete(id: string): Promise<void>;
   findAllByCreated(createdAfter: Date): Promise<FiscalRpsEntity[]>;
   findAll(batchId: string): Promise<FiscalRpsEntity[]>;
+  deleteByPaymentId(paymentId: string): Promise<void>;
   findByNumber(number: string): Promise<FiscalRpsEntity>;
 }

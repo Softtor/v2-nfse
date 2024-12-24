@@ -7,6 +7,11 @@ import { BadRequestError } from '@/shared/domain/errors/bad-request-error';
 
 export class FiscalRpsPrismaRepository implements FiscalRpsRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async deleteByPaymentId(paymentId: string): Promise<void> {
+    this.prismaService.fiscalRps.deleteMany({
+      where: { payment_id: paymentId },
+    });
+  }
 
   async findById(id: string): Promise<FiscalRpsEntity> {
     const model = await this.prismaService.fiscalRps.findUnique({

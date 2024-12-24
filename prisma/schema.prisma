@@ -43,6 +43,7 @@ model FiscalRps {
   service_description       String?
   cnae_code                 Int?
   activity_code             String?
+  payment_id                String?
   created_at                DateTime  @default(now())
   updated_at                DateTime  @updatedAt
 
@@ -72,7 +73,7 @@ model FiscalNfse {
   base64Pdf         String?         @db.Text
   provider          FiscalProvider? @relation(fields: [provider_id], references: [id])
   taker             FiscalTaker?    @relation(fields: [taker_id], references: [id])
-  rps               FiscalRps       @relation(fields: [rps_id], references: [id])
+  rps               FiscalRps       @relation(fields: [rps_id], references: [id], onDelete: Cascade)
 
   @@map("fiscal_nfse")
 }
