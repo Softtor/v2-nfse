@@ -34,6 +34,8 @@ RUN curl -fsSL https://bun.sh/install | bash
 
 RUN npm install -g @nestjs/cli
 
+RUN npm install -g prisma
+
 # Adicionar o caminho do Chromium ao PATH
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
@@ -46,7 +48,6 @@ COPY package*.json ./
 RUN npm install --production
 
 COPY . .
-RUN npm run build
 
 # Stage 3 - Produção
 FROM base AS production
