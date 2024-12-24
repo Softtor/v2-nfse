@@ -64,7 +64,7 @@ USER nestjs
 
 EXPOSE 4000
 
-CMD ["npm", "run", "start:prod"]
+CMD ["/usr/local/bin/start.sh"]
 
 # Stage 4 - Desenvolvimento
 FROM base AS development
