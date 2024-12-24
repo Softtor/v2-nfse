@@ -36,6 +36,10 @@ RUN npm install -g @nestjs/cli
 
 RUN npm install -g prisma
 
+ADD start.sh /usr/local/bin/start.sh
+
+RUN chmod +x /usr/local/bin/start.sh
+
 # Adicionar o caminho do Chromium ao PATH
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
