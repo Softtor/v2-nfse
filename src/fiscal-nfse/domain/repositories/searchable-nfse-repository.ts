@@ -3,8 +3,8 @@ import { FiscalNfseEntity } from '../entities/fiscal-nfse.entity';
 
 export namespace SearchableNfseRepository {
   export type SearchInput = {
-    page?: number;
-    limit?: number;
+    skip?: number;
+    take?: number;
   };
 
   export interface Repository {
@@ -15,5 +15,6 @@ export namespace SearchableNfseRepository {
     searchByNumber(number: number): Promise<FiscalNfseEntity>;
     cancelNfse(number: number): Promise<void>;
     update(id: string, data: Partial<FiscalNfseEntity>): Promise<void>;
+    total(): Promise<number>;
   }
 }

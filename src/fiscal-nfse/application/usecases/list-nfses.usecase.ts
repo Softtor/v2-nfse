@@ -11,25 +11,31 @@ export namespace ListNfses {
     perPage: number;
   };
 
-  export type Output = Promise<
-    {
+  export type Output = Promise<{
+    items: {
       nfse: FiscalNfseEntity;
       taker: FiscalTakerEntity;
-    }[]
-  >;
+    }[];
+    total: number;
+  }>;
 
   @Injectable()
   export class UseCase implements DefaultUsecase<Input, Output> {
     @Inject('SearchableNfseRepository')
     private nfseRepository: SearchableNfseRepository.Repository;
 
-    execute(input: Input): Promise<
-      {
-        nfse: FiscalNfseEntity;
-        taker: FiscalTakerEntity;
-      }[]
-    > {
-      return this.nfseRepository.searchWithTaker(input);
+    async execute(input: Input): Promise<Output> {
+      const { skip, take } = this.paginate(input.page, input.perPage);
+      const total = await this.nfseRepository.total();
+      const items = await this.nfseRepository.searchWithTaker({ skip, take });
+      return { items, total };
+    }
+
+    private paginate(page?: number | undefined, perPage?: number | undefined) {
+      const currentPage = page || 1;
+      const limit = perPage || 10;
+      const skip = (currentPage - 1) * limit;
+      return { skip, take: Number(limit) };
     }
   }
 }

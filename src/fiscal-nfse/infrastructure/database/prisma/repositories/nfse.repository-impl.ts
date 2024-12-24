@@ -13,13 +13,9 @@ export class NfseRepositoryImpl implements SearchableNfseRepository.Repository {
   async searchWithTaker(
     input: SearchableNfseRepository.SearchInput,
   ): Promise<{ nfse: FiscalNfseEntity; taker: FiscalTakerEntity }[]> {
-    const page = input.page || 1;
-    const limit = input.limit || 10;
-    const skip = (page - 1) * limit;
-
     const result = await this.prisma.fiscalNfse.findMany({
-      skip,
-      take: limit,
+      skip: input.skip,
+      take: input.take,
       include: {
         taker: true,
       },
@@ -46,12 +42,14 @@ export class NfseRepositoryImpl implements SearchableNfseRepository.Repository {
     }
   }
 
+  async total(): Promise<number> {
+    return this.prisma.fiscalNfse.count();
+  }
+
   async search(
     input: SearchableNfseRepository.SearchInput,
   ): Promise<FiscalNfseEntity[]> {
-    const page = input.page || 1;
-    const limit = input.limit || 10;
-    const skip = (page - 1) * limit;
+    const { skip, take: limit } = input;
     const prismaResult = await this.prisma.fiscalNfse.findMany({
       skip,
       take: limit,
