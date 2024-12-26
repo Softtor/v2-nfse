@@ -83,7 +83,8 @@ FROM base AS development
 
 ENV NODE_ENV=development
 
-COPY package*.json ./
+COPY . .
+
 RUN npm install
 
 COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
@@ -92,7 +93,6 @@ RUN chmod +x /usr/local/bin/wait-for-it.sh
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
-COPY . .
 
 EXPOSE 4000
 
