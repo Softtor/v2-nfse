@@ -51,15 +51,13 @@ export class NfseBatchListener {
         consultLote.ConsultarLoteRpsResult.ListaMensagemRetorno
       ) {
         console.error(
-          'Error ao consultar Lote',
+          'Erro ao consultar Lote',
           JSON.stringify(consultLote, null, 2),
         );
         throw new BadRequestError(
           'Erro ao consultar Lote: ' + JSON.stringify(consultLote, null, 2),
         );
       }
-
-      console.log('consultLote ok', JSON.stringify(consultLote, null, 2));
 
       this.eventEmitter.emit('fiscal-nfse.create', consultLote);
 
@@ -70,13 +68,27 @@ export class NfseBatchListener {
         },
       );
 
-      const number =
-        consultLote.ConsultarLoteRpsResult.ListaNfse.CompNfse.tcCompNfse[0].Nfse
-          .InfNfse.Numero;
-      const pdf = files[0].pdf;
-      const xml = files[0].xml;
+      const nfseItems =
+        consultLote.ConsultarLoteRpsResult.ListaNfse.CompNfse.tcCompNfse;
 
-      this.eventEmitter.emit('generate-nfse-archives', { number, pdf, xml });
+      if (!nfseItems || nfseItems.length === 0) {
+        console.error('Nenhuma NFSe encontrada no retorno.');
+        throw new BadRequestError('Nenhuma NFSe encontrada no retorno.');
+      }
+
+      nfseItems.forEach((nfse, index) => {
+        const number = nfse.Nfse.InfNfse.Numero;
+        const pdf = files[index]?.pdf;
+        const xml = files[index]?.xml;
+
+        if (!pdf || !xml) {
+          console.warn(`Arquivos não encontrados para NFSe número ${number}`);
+          return;
+        }
+
+        this.eventEmitter.emit('generate-nfse-archives', { number, pdf, xml });
+      });
+
       return;
     } catch (error) {
       console.error('Erro ao consultar NFSe:', error);
