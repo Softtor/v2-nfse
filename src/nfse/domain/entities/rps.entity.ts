@@ -37,6 +37,7 @@ export class RpsEntity extends Entity<RpsProps> {
     const validator = RpsEntityValidatorFactory.create();
     const isValid = validator.validate(props);
     if (!isValid) {
+      console.log(validator.errors);
       throw new EntityValidationError(validator.errors);
     }
   }

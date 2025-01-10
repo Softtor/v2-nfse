@@ -39,7 +39,7 @@ export class FindFiscalRpsByCreatedAtUseCase {
           series: rpsEntity.series,
           type: rpsEntity.type,
         },
-        emissionDate: rpsEntity.issueDateRps?.toISOString() ?? '',
+        emissionDate: rpsEntity.createdAt?.toISOString() ?? '',
         status: rpsEntity.status,
         service: relatedData.service,
         provider: relatedData.provider,
@@ -88,7 +88,6 @@ export class FindFiscalRpsByCreatedAtUseCase {
     return {
       data: rps,
       providerId: rpsList[0].providerId,
-      rpsId: rpsList[0].id,
     };
   }
 
