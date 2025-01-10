@@ -8,7 +8,7 @@ export async function seedFiscalNfConfig() {
       where: { emitter_id: 1 },
       update: {
         serie: '2',
-        next_document_number: 1,
+        next_document_number: 36,
         simple_national: true,
         taxation_regime: 'MICROEMPRESA_MUNICIPAL',
         operation_nature: '1',
@@ -18,7 +18,7 @@ export async function seedFiscalNfConfig() {
       },
       create: {
         serie: '2',
-        next_document_number: 1,
+        next_document_number: 36,
         simple_national: true,
         taxation_regime: 'MICROEMPRESA_MUNICIPAL',
         operation_nature: '1',
