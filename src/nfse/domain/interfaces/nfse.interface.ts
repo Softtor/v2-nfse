@@ -166,3 +166,93 @@ export interface NfseProps {
     } | null;
   };
 }
+
+export interface NfsePorLoteResponse {
+  ConsultarLoteRpsResult: {
+    ListaNfse: {
+      CompNfse: {
+        tcCompNfse: {
+          Nfse: {
+            InfNfse: {
+              Numero: string;
+              CodigoVerificacao: string;
+              DataEmissao: string;
+              IdentificacaoRps: {
+                Numero: string;
+                Serie: string;
+                Tipo: string;
+              };
+              DataEmissaoRps: string;
+              NaturezaOperacao: string;
+              RegimeEspecialTributacao: string;
+              OptanteSimplesNacional: string;
+              IncentivadorCultural: string;
+              Competencia: string;
+              NfseSubstituida: string;
+              Servico: {
+                Valores: {
+                  ValorServicos: number;
+                  NumeroDeducao: number;
+                  ValorDeducoes: number;
+                  ValorPis: number;
+                  ValorCofins: number;
+                  ValorInss: number;
+                  ValorIr: number;
+                  ValorCsll: number;
+                  IssRetido: string;
+                  ValorIss: number;
+                  ValorIssRetido: number;
+                  OutrasRetencoes: number;
+                  BaseCalculo: number;
+                  Aliquota: number;
+                  ValorLiquidoNfse: number;
+                  DescontoIncondicionado: number;
+                  DescontoCondicionado: number;
+                };
+                ItemListaServico: string;
+                CodigoCnae: number;
+                CodigoTributacaoMunicipio: string;
+                Discriminacao: string;
+                CodigoMunicipio: number;
+              };
+              ValorCredito: number;
+              PrestadorServico: {
+                IdentificacaoPrestador: {
+                  Cnpj: string;
+                  InscricaoMunicipal: string;
+                };
+                NomeFantasia: string;
+                Endereco: {
+                  Endereco: string;
+                  Numero: string;
+                  Bairro: string;
+                  CodigoMunicipio: number;
+                  Uf: string;
+                  Cep: number;
+                };
+              };
+              TomadorServico: {
+                IdentificacaoTomador: {
+                  CpfCnpj: {
+                    Cpf?: string;
+                    Cnpj?: string;
+                  };
+                };
+                RazaoSocial: string;
+                Endereco: {
+                  CodigoMunicipio: number;
+                  Cep: number;
+                };
+                Contato: {
+                  Telefone: string;
+                  Email: string;
+                };
+              };
+            };
+          };
+        }[];
+      };
+    };
+    ListaMensagemRetorno: null;
+  };
+}

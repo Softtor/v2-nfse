@@ -2,7 +2,7 @@ import { CreateFiscalNfseDTO } from '@/fiscal-batchs/application/dtos/fiscal-nfs
 import { RetryFailedConsultationService } from '@/fiscal-batchs/application/services/fiscal-nfse/fiscal-nfse-retry-consult.service';
 import { FiscalNfseService } from '@/fiscal-batchs/application/services/fiscal-nfse/fiscal-nfse.service';
 import { FiscalNfseMapper } from '@/fiscal-batchs/infrastructure/interfaces/fiscal-nfse.mapper';
-import { NfseResponse } from '@/nfse/domain/interfaces/nfse.interface';
+import { NfsePorLoteResponse } from '@/nfse/domain/interfaces/nfse.interface';
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
@@ -14,7 +14,7 @@ export class FiscalNfseListener {
   ) {}
 
   @OnEvent('fiscal-nfse.create')
-  async handleFiscalNfseCreateEvent(dto: NfseResponse) {
+  async handleFiscalNfseCreateEvent(dto: NfsePorLoteResponse) {
     const nfse = await this.fiscalNfseService.create(dto);
     return nfse;
   }

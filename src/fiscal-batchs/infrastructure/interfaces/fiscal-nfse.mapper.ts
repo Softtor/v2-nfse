@@ -1,22 +1,27 @@
 import { CreateFiscalNfseDTO } from '@/fiscal-batchs/application/dtos/fiscal-nfse-input.dto';
-import { NfseResponse } from '@/nfse/domain/interfaces/nfse.interface';
+import { NfsePorLoteResponse } from '@/nfse/domain/interfaces/nfse.interface';
 
 export class FiscalNfseMapper {
-  static toCreateDto(response: NfseResponse): CreateFiscalNfseDTO {
-    const nfseData = response.ConsultarNfsePorRpsResult.CompNfse?.Nfse.InfNfse;
+  static toCreateDto(response: NfsePorLoteResponse): CreateFiscalNfseDTO[] {
+    const nfseArray =
+      response.ConsultarLoteRpsResult.ListaNfse.CompNfse.tcCompNfse;
 
-    if (!nfseData) {
+    if (!nfseArray || nfseArray.length === 0) {
       throw new Error('NFSe data is missing in the response');
     }
 
-    return {
-      number: Number(nfseData.Numero),
-      verificationCode: nfseData.CodigoVerificacao,
-      issueDate: new Date(nfseData.DataEmissao),
-      rpsNumber: nfseData.IdentificacaoRps.Numero,
-      rpsIssueDate: new Date(nfseData.DataEmissaoRps),
-      competence: new Date(nfseData.Competencia),
-      sentAt: undefined,
-    };
+    return nfseArray.map((nfseItem) => {
+      const nfseData = nfseItem.Nfse.InfNfse;
+
+      return {
+        number: Number(nfseData.Numero),
+        verificationCode: nfseData.CodigoVerificacao,
+        issueDate: new Date(nfseData.DataEmissao),
+        rpsNumber: nfseData.IdentificacaoRps.Numero,
+        rpsIssueDate: new Date(nfseData.DataEmissaoRps),
+        competence: new Date(nfseData.Competencia),
+        sentAt: undefined,
+      };
+    });
   }
 }

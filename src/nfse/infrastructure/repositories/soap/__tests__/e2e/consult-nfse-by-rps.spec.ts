@@ -85,8 +85,8 @@ describe('ConsultarNfsePorRpsRepository', () => {
 
   it('should return the correct protocol in the correct format', async () => {
     const inputData: ConsultNfseByRpsInput = {
-      numero: '13',
-      serie: '2',
+      numero: '26',
+      serie: '1',
       tipo: 1,
       cnpj: '46204900000151',
       inscricaoMunicipal: '010112006414',

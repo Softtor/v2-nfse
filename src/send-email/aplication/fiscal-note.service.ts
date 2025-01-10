@@ -2,13 +2,13 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { PdfGeneratorService } from '@/send-email/aplication/pdf-generator.service';
 import { XmlService } from '@/send-email/aplication/xml-generator.service';
 import { SendEmailService } from '@/send-email/aplication/send-email.service';
-import { NfseResponse } from '@/nfse/domain/interfaces/nfse.interface';
-import { NfseMapper } from '@/nfse/infrastructure/repositories/soap/mappers/nfse.mapper';
+import { NfsePorLoteResponse } from '@/nfse/domain/interfaces/nfse.interface';
 import { greetingsTemplate } from '@/send-email/aplication/helper/greetings-template';
 import { generateFiscalNoteTemplate } from '@/send-email/aplication/helper/fiscal-note-template';
 import { StorageProvider } from '@/shared/application/providers/storage.provider';
 import * as fs from 'fs';
 import * as path from 'path';
+import { NfseLoteMapper } from '@/nfse/infrastructure/repositories/soap/mappers/nfse-lote.mapper';
 
 @Injectable()
 export class FiscalNoteService {
@@ -19,9 +19,9 @@ export class FiscalNoteService {
     private readonly storageProvider: StorageProvider,
   ) {}
 
-  async generatePdf(data: NfseResponse): Promise<Buffer> {
+  async generatePdf(data: NfsePorLoteResponse): Promise<Buffer> {
     try {
-      const nfseEntity = NfseMapper.fromWS(data);
+      const nfseEntity = NfseLoteMapper.fromWS(data);
       const html = generateFiscalNoteTemplate(nfseEntity);
       return await this.pdfGeneratorService.generatePdfFromHtml(html);
     } catch (error) {
@@ -29,7 +29,7 @@ export class FiscalNoteService {
     }
   }
 
-  async generatePdfToBase64(data: NfseResponse): Promise<string> {
+  async generatePdfToBase64(data: NfsePorLoteResponse): Promise<string> {
     try {
       const pdfBuffer = await this.generatePdf(data);
       return pdfBuffer.toString('base64');
@@ -38,9 +38,9 @@ export class FiscalNoteService {
     }
   }
 
-  async generateXml(data: NfseResponse): Promise<string> {
+  async generateXml(data: NfsePorLoteResponse): Promise<string> {
     try {
-      const nfseEntity = NfseMapper.fromWS(data);
+      const nfseEntity = NfseLoteMapper.fromWS(data);
       return this.xmlService.convertToXml(nfseEntity);
     } catch (error) {
       throw new HttpException(`Error generating XML: ${error.message}`, 500);
@@ -51,10 +51,10 @@ export class FiscalNoteService {
     email: string;
     subject?: string;
     takerName: string;
-    rps: NfseResponse;
+    rps: NfsePorLoteResponse;
   }): Promise<void> {
     try {
-      const nfseEntity = NfseMapper.fromWS(data.rps);
+      const nfseEntity = NfseLoteMapper.fromWS(data.rps);
       const emailBody = greetingsTemplate(data.takerName);
 
       const pdfFilePath = `nota_fiscal_${nfseEntity.number}.pdf`;

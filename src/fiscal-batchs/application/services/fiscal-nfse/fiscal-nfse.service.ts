@@ -8,7 +8,7 @@ import {
 } from '../../dtos/fiscal-nfse-output.dto';
 import { NotFoundError } from '@/shared/domain/errors/not-found-error';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { NfseResponse } from '@/nfse/domain/interfaces/nfse.interface';
+import { NfsePorLoteResponse } from '@/nfse/domain/interfaces/nfse.interface';
 import { FiscalNfseMapper } from '@/fiscal-batchs/infrastructure/interfaces/fiscal-nfse.mapper';
 
 @Injectable()
@@ -19,28 +19,34 @@ export class FiscalNfseService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async create(dto: NfseResponse): Promise<FiscalNfseOutputDto> {
+  async create(dto: NfsePorLoteResponse): Promise<FiscalNfseOutputDto[]> {
     const data = FiscalNfseMapper.toCreateDto(dto);
-    const rpsData = await this.getRpsData(data.rpsNumber);
-    const completeDto = {
-      ...data,
-      rpsId: rpsData.id,
-      providerId: rpsData.providerId,
-      takerId: rpsData.takerId,
-    };
+    const results: FiscalNfseOutputDto[] = [];
 
-    const nfseEntity = this.createEntity(completeDto);
-    await this.fiscalNfseRepository.save(nfseEntity);
-    const taker = await this.eventEmitter.emitAsync(
-      'fiscal-taker.get.takerId',
-      rpsData.takerId,
-    );
-    await this.eventEmitter.emitAsync('send-email.fiscal-note', {
-      email: taker[0].email,
-      takerName: taker[0].name,
-      rps: dto,
-    });
-    return FiscalNfseOutputMapper.toOutput(nfseEntity);
+    for (const item of data) {
+      const rpsData = await this.getRpsData(item.rpsNumber);
+      const completeDto = {
+        ...item,
+        rpsId: rpsData.id,
+        providerId: rpsData.providerId,
+        takerId: rpsData.takerId,
+      };
+
+      const nfseEntity = this.createEntity(completeDto);
+      await this.fiscalNfseRepository.save(nfseEntity);
+      const taker = await this.eventEmitter.emitAsync(
+        'fiscal-taker.get.takerId',
+        rpsData.takerId,
+      );
+      await this.eventEmitter.emitAsync('send-email.fiscal-note', {
+        email: taker[0].email,
+        takerName: taker[0].name,
+        rps: dto,
+      });
+      results.push(FiscalNfseOutputMapper.toOutput(nfseEntity));
+    }
+
+    return results;
   }
 
   async getByRps(rpsId: string): Promise<FiscalNfseOutputDto | null> {

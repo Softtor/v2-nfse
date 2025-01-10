@@ -1,4 +1,4 @@
-import { NfseResponse } from '@/nfse/domain/interfaces/nfse.interface';
+import { NfsePorLoteResponse } from '@/nfse/domain/interfaces/nfse.interface';
 import { FiscalNoteService } from '@/send-email/aplication/fiscal-note.service';
 import { BadRequestError } from '@/shared/domain/errors/bad-request-error';
 import { Injectable } from '@nestjs/common';
@@ -15,7 +15,7 @@ export class SendEmailListener {
   async handlerSendEmailFiscalNoteEvent(data: {
     email: string;
     takerName: string;
-    rps: NfseResponse;
+    rps: NfsePorLoteResponse;
   }) {
     try {
       await this.fiscalNoteService.generateAndSendEmail(data);
@@ -26,7 +26,7 @@ export class SendEmailListener {
   }
 
   @OnEvent('send-email.convert-files')
-  async handlerConvertFilesEvent(data: { rps: NfseResponse }) {
+  async handlerConvertFilesEvent(data: { rps: NfsePorLoteResponse }) {
     try {
       const pdf = await this.fiscalNoteService.generatePdfToBase64(data.rps);
       const xml = await this.fiscalNoteService.generateXml(data.rps);

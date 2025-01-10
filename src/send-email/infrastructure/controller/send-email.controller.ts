@@ -3,7 +3,10 @@ import { ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { SendFiscalNoteDto } from '../dto/send-fiscal-note.dto';
 import { FiscalNoteService } from '@/send-email/aplication/fiscal-note.service';
-import { NfseResponse } from '@/nfse/domain/interfaces/nfse.interface';
+import {
+  NfsePorLoteResponse,
+  NfseResponse,
+} from '@/nfse/domain/interfaces/nfse.interface';
 
 @Controller('send-email')
 export class SendEmailController {
@@ -15,7 +18,7 @@ export class SendEmailController {
   @ApiResponse({ status: 200, description: 'PDF generated successfully.' })
   @ApiResponse({ status: 500, description: 'Error generating PDF.' })
   async generatePdf(
-    @Body() data: NfseResponse,
+    @Body() data: NfsePorLoteResponse,
     @Res() res: Response,
   ): Promise<any> {
     try {

@@ -7,7 +7,7 @@ export async function seedFiscalNfConfig() {
     const fiscalNfConfig = await prisma.fiscalNfConfig.upsert({
       where: { emitter_id: 1 },
       update: {
-        serie: '1',
+        serie: '2',
         next_document_number: 1,
         simple_national: true,
         taxation_regime: 'MICROEMPRESA_MUNICIPAL',
@@ -17,7 +17,7 @@ export async function seedFiscalNfConfig() {
         updated_at: new Date(),
       },
       create: {
-        serie: '1',
+        serie: '2',
         next_document_number: 1,
         simple_national: true,
         taxation_regime: 'MICROEMPRESA_MUNICIPAL',

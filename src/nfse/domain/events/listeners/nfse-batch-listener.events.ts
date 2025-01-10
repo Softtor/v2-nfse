@@ -4,7 +4,10 @@ import { BadRequestError } from '@/shared/domain/errors/bad-request-error';
 import { CuritibaRepositoryImpl } from '@/nfse/infrastructure/repositories/soap/curitiba-repository-impl';
 import { ReceiveBatchRpsInterface } from '../../interfaces/receive-batch-rps.interface';
 import { ConsultNfseByRpsInput } from '../../interfaces/consult-nfse-by-rps-input.interface';
-import { NfseResponse } from '../../interfaces/nfse.interface';
+import {
+  NfsePorLoteResponse,
+  NfseResponse,
+} from '../../interfaces/nfse.interface';
 
 @Injectable()
 export class NfseBatchListener {
@@ -34,21 +37,18 @@ export class NfseBatchListener {
     rpsProtocol: string;
   }) {
     try {
-      const consultLote = await this.consultarSituacaoLote.send({
-        Prestador: {
-          Cnpj: event.data.cnpj,
-          InscricaoMunicipal: event.data.inscricaoMunicipal,
-        },
-        Protocolo: event.rpsProtocol,
-      });
-      console.log(
-        'erro?',
-        consultLote.ConsultarLoteRpsResult?.ListaMensagemRetorno
-          ?.MensagemRetorno,
-      );
+      const consultLote: NfsePorLoteResponse =
+        await this.consultarSituacaoLote.send({
+          Prestador: {
+            Cnpj: event.data.cnpj,
+            InscricaoMunicipal: event.data.inscricaoMunicipal,
+          },
+          Protocolo: event.rpsProtocol,
+        });
+
       if (
-        consultLote.ConsultarLoteRpsResult?.ListaMensagemRetorno
-          ?.MensagemRetorno
+        consultLote.ConsultarLoteRpsResult &&
+        consultLote.ConsultarLoteRpsResult.ListaMensagemRetorno
       ) {
         console.error(
           'Error ao consultar Lote',
@@ -59,28 +59,25 @@ export class NfseBatchListener {
         );
       }
 
-      console.log('is trying to consult');
-      const result = (await this.consultarNfsePorRps.consultarNfsePorRps(
-        event.data,
-      )) as unknown as NfseResponse;
+      console.log('consultLote ok', JSON.stringify(consultLote, null, 2));
 
-      console.log('NFSe processada com sucesso', result);
-
-      this.eventEmitter.emit('fiscal-nfse.create', result);
+      this.eventEmitter.emit('fiscal-nfse.create', consultLote);
 
       const files = await this.eventEmitter.emitAsync(
         'send-email.convert-files',
         {
-          rps: result,
+          rps: consultLote,
         },
       );
+
       const number =
-        result.ConsultarNfsePorRpsResult.CompNfse.Nfse.InfNfse.Numero;
+        consultLote.ConsultarLoteRpsResult.ListaNfse.CompNfse.tcCompNfse[0].Nfse
+          .InfNfse.Numero;
       const pdf = files[0].pdf;
       const xml = files[0].xml;
 
       this.eventEmitter.emit('generate-nfse-archives', { number, pdf, xml });
-      return result;
+      return;
     } catch (error) {
       console.error('Erro ao consultar NFSe:', error);
       throw new BadRequestError('Erro ao consultar NFSe: ' + error);

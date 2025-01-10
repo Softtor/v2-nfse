@@ -1,4 +1,7 @@
-import { NfseResponse } from '@/nfse/domain/interfaces/nfse.interface';
+import {
+  NfsePorLoteResponse,
+  NfseResponse,
+} from '@/nfse/domain/interfaces/nfse.interface';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SendFiscalNoteDto {
@@ -12,5 +15,5 @@ export class SendFiscalNoteDto {
   readonly subject?: string;
 
   @ApiProperty()
-  readonly rps: NfseResponse;
+  readonly rps: NfsePorLoteResponse;
 }
