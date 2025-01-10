@@ -15,7 +15,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js', 'dist', 'node_modules'],
+  ignorePatterns: ['.eslintrc.js', 'dist', 'node_modules', '__tests__'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -25,6 +25,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-namespace': 'off',
-    semi: ['error', 'always'], // Garante que o ponto e vírgula seja sempre necessário
+    semi: ['error', 'always'],
   },
 };
