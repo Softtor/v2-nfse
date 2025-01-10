@@ -19,7 +19,7 @@ export class BatchRpsService {
 
     const rpsArray = await this.eventEmitter.emitAsync(
       'fiscal-rps.findAllByCreatedAt',
-      now,
+      sevenDaysAgo,
     );
     const flattenedRps = rpsArray[0];
     console.log('flattenedRps', flattenedRps);
