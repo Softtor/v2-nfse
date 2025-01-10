@@ -13,11 +13,11 @@ export async function main() {
   await seedFiscalEmitter();
   await seedFiscalProvider();
   await seedFiscalNfConfig();
+  await seedFiscalServices();
 
   if (process.env.NODE_ENV === 'development') {
     console.log('Running development seeders...');
     await seedFiscalTakers();
-    await seedFiscalServices();
     await seedFiscalBatchsRps();
     await seedFiscalRps();
     await seedFiscalNfse();
