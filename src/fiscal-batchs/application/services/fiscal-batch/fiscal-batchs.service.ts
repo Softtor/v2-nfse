@@ -105,11 +105,14 @@ export class FiscalBatchService {
   ): void {
     for (const rps of rpsArray) {
       const consultData = {
-        Prestador: {
-          Cnpjs: rps.Rps.InfRps.Prestador.Cnpj,
-          InscricaoMunicipal: rps.Rps.InfRps.Prestador.InscricaoMunicipal,
+        data: {
+          numero: rps.Rps.InfRps.IdentificacaoRps.Numero,
+          serie: rps.Rps.InfRps.IdentificacaoRps.Serie,
+          tipo: parseInt(rps.Rps.InfRps.IdentificacaoRps.Tipo, 10),
+          cnpj: rps.Rps.InfRps.Prestador.Cnpj,
+          inscricaoMunicipal: rps.Rps.InfRps.Prestador.InscricaoMunicipal,
         },
-        Protocolo: createdBatch.protocol,
+        rpsProtocol: createdBatch.protocol,
       };
       try {
         this.eventEmitter.emit('fiscal-nfse.consult', consultData);

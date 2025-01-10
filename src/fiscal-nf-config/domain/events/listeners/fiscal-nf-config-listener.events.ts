@@ -16,7 +16,6 @@ export class FiscalNfConfigListenerEvents {
 
   @OnEvent('fiscal-nf-config.get')
   async handlerGetFiscalNfConfigEvent(emitterId: number) {
-    console.log('handlerGetFiscalNfConfigEvent:', emitterId);
     return await this.getFiscalNfConfig.execute(emitterId);
   }
 

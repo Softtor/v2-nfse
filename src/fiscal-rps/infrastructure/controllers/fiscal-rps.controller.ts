@@ -5,6 +5,7 @@ import {
   Put,
   Delete,
   Param,
+  Post,
 } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
@@ -39,6 +40,7 @@ export class FiscalRpsController {
     private readonly showRpsByPaymentIdUseCase: ShowRpsByPaymentIdUseCase.UseCase,
   ) {}
 
+  @Post('create-taker')
   @ApiOperation({ summary: 'Create a new Fiscal Taker' })
   @ApiBody({ type: CreateFiscalRpsDTO['taker'] })
   @ApiResponse({
@@ -86,6 +88,7 @@ export class FiscalRpsController {
     }
   }
 
+  @Post('create-service')
   @ApiOperation({ summary: 'Create a new Fiscal Service' })
   @MessagePattern('create-service')
   @ApiBody({ type: CreateFiscalServiceDto })
@@ -133,6 +136,7 @@ export class FiscalRpsController {
     }
   }
 
+  @Post('create-rps')
   @ApiOperation({ summary: 'Create a new Fiscal RPS' })
   @MessagePattern('create-rps')
   @ApiResponse({

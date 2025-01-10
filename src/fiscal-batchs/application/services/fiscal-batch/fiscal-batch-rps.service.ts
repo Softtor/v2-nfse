@@ -14,7 +14,7 @@ export class BatchRpsService {
 
     const rpsArray = await this.eventEmitter.emitAsync(
       'fiscal-rps.findAllByCreatedAt',
-      sevenDaysAgo,
+      now,
     );
     const flattenedRps = rpsArray[0].flat();
 
@@ -47,7 +47,6 @@ export class BatchRpsService {
         id: rps.rpsId,
         batchId: batchId,
       };
-      console.log('updateDto-batchId', updateDto);
       await this.eventEmitter.emitAsync('fiscal-rps.update', updateDto);
     }
   }

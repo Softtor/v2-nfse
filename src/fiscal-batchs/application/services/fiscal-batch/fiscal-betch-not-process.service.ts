@@ -23,7 +23,6 @@ export class BatchNotProcessService {
         },
       );
       const result = response[0];
-      console.log('Resultado do processamento do lote:', result);
       batch.update({
         protocol: result.protocol,
         receiptDate: result.message,
