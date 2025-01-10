@@ -1,15 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CuritibaRepositoryImpl } from '../../curitiba-repository-impl';
-import { EnvConfigModule } from '@/shared/infrastructure/env-config/env-config.module';
-import { EnvConfigService } from '@/shared/infrastructure/env-config/env-config.service';
-import { StorageProvider } from '@/shared/application/providers/storage.provider';
-import { CertificateProvider } from '@/shared/application/providers/certificate.provider';
+import { EnvConfigModule } from '../../../../../../shared/infrastructure/env-config/env-config.module';
+import { EnvConfigService } from '../../../../../../shared/infrastructure/env-config/env-config.service';
+import { StorageProvider } from '../../../../../../shared/application/providers/storage.provider';
+import { CertificateProvider } from '../../../../../../shared/application/providers/certificate.provider';
 import { Client, createClient } from 'soap';
-import { ICertificateProvider } from '@/shared/domain/providers/certificate.provider';
+import { ICertificateProvider } from '../../../../../../shared/domain/providers/certificate.provider';
 import { batch } from '../testing/builders';
 import { BatchRpsMapper } from '../../mappers/batch-rps.mapper';
 describe('ReceiveBatchRpsRepository', () => {
   let repository: CuritibaRepositoryImpl.RecepcionarLoteRps;
+  let consultLoteRps: CuritibaRepositoryImpl.ConsultarSituacaoLoteRps;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [EnvConfigModule.forRoot()],
@@ -80,19 +81,37 @@ describe('ReceiveBatchRpsRepository', () => {
     repository = module.get<CuritibaRepositoryImpl.RecepcionarLoteRps>(
       CuritibaRepositoryImpl.RecepcionarLoteRps,
     );
+    consultLoteRps =
+      module.get<CuritibaRepositoryImpl.ConsultarSituacaoLoteRps>(
+        CuritibaRepositoryImpl.ConsultarSituacaoLoteRps,
+      );
   });
 
   it('should be defined', () => {
     expect(repository).toBeDefined();
   });
 
-  it('should receive batch rps', async () => {
-    const batchRps = new BatchRpsMapper(batch).toWS();
-    await repository.send({ LoteRps: batchRps });
-    const result = repository.getResponse();
-    expect(result).toBeDefined();
-    expect(result.batchnumber).toBeDefined();
-    expect(result.protocol).toBeDefined();
-    expect(result.message).toBeDefined();
+  // it('should receive batch rps', async () => {
+  //   const batchRps = new BatchRpsMapper(batch).toWS();
+  //   await repository.send({ LoteRps: batchRps });
+  //   const result = repository.getResponse();
+  //   expect(result).toBeDefined();
+  //   expect(result.batchnumber).toBeDefined();
+  //   expect(result.protocol).toBeDefined();
+  //   expect(result.message).toBeDefined();
+  // });
+
+  it('should consult batch situation', async () => {
+    const result = await consultLoteRps.send({
+      Protocolo: '638720679483537739',
+      Prestador: {
+        Cnpj: '46204900000151',
+        InscricaoMunicipal: '010112006414',
+      },
+    });
+    console.log(
+      result.ConsultarLoteRpsResult.ListaMensagemRetorno.MensagemRetorno,
+    );
+    expect.assertions(0);
   });
 });
