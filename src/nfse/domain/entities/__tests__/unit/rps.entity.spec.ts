@@ -15,6 +15,8 @@ describe('RpsEntity Unit Tests', () => {
     simpleNationalOptant: 'yes',
     fiscalIncentive: 'no',
     additionalInformation: 'info',
+    culturalIncentive: '1',
+    natureOperation: '2',
   };
 
   it('should create an RpsEntity with valid properties', () => {

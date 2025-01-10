@@ -15,8 +15,8 @@ export type ServiceProps = {
   issValue?: number;
   rate?: number;
   nbsCode?: string;
-  unconditionalDiscount: number;
-  conditionalDiscount: number;
+  unconditionalDiscount?: number;
+  conditionalDiscount?: number;
   issWithheld: number;
   serviceItemList: string;
   cnaeCode: string;
