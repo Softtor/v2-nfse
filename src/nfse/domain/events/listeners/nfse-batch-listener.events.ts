@@ -31,6 +31,7 @@ export class NfseBatchListener {
   async handlerConsultNfseEvent(data: ConsultNfseByRpsInput) {
     try {
       //para teste, comentar a linha abaixo e adicionar um mock de retorno
+      console.log('is trying to consult');
       const result = (await this.consultarNfsePorRps.consultarNfsePorRps(
         data,
       )) as unknown as NfseResponse;

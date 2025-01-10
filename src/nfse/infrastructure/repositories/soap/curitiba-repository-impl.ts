@@ -104,8 +104,9 @@ export namespace CuritibaRepositoryImpl {
             ...data,
           },
         });
+
         if (!response.ok) {
-          throw new Error('Erro ao enviar lote de RPS');
+          this.getResponse(response);
         }
 
         // const response = {
@@ -118,6 +119,7 @@ export namespace CuritibaRepositoryImpl {
         // }; //to test
         return this.getResponse(response);
       } catch (error) {
+        console.log(error, 'error');
         console.log('Error:', error);
       }
     }
@@ -138,7 +140,7 @@ export namespace CuritibaRepositoryImpl {
       };
     }
   }
-
+  //638720679483537739
   @Injectable()
   export class ConsultarSituacaoLoteRps extends SoapAbstractRepository {
     async send(data: ConsultBatchSituationInterface): Promise<any> {

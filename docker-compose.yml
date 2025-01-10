@@ -36,6 +36,7 @@ services:
       PMA_HOST: database
       PMA_USER: '${DATABASE_USER-nfse_curitiba}'
       PMA_PASSWORD: '${DATABASE_PASSWORD-root}'
+      UPLOAD_LIMIT: 300M
     depends_on:
       - database
     networks:
