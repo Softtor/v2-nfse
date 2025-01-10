@@ -11,10 +11,8 @@ export class GetFiscalNfConfigsByEmitterUseCase {
   constructor(private fiscalNfConfigRepository: FiscalNfConfigRepository) {}
 
   async execute(emitterId: number): Promise<FiscalNfConfigOutputDto> {
-    console.log('GetFiscalNfConfigsByEmitterUseCase:', emitterId);
     const config =
       await this.fiscalNfConfigRepository.findByEmitterId(emitterId);
-    console.log('GetFiscalNfConfigsByEmitterUseCase----->:', config);
     return FiscalNfConfigOutputMapper.toOutput(config);
   }
 }

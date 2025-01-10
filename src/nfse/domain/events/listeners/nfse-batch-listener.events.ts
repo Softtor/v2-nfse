@@ -11,6 +11,7 @@ export class NfseBatchListener {
   constructor(
     private readonly recepcionarLoteRps: CuritibaRepositoryImpl.RecepcionarLoteRps,
     private readonly consultarNfsePorRps: CuritibaRepositoryImpl.ConsultarNfsePorRps,
+    private readonly consultarSituacaoLote: CuritibaRepositoryImpl.ConsultarSituacaoLoteRps,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -28,12 +29,24 @@ export class NfseBatchListener {
   }
 
   @OnEvent('fiscal-nfse.consult')
-  async handlerConsultNfseEvent(data: ConsultNfseByRpsInput) {
+  async handlerConsultNfseEvent(event: {
+    data: ConsultNfseByRpsInput;
+    rpsProtocol: string;
+  }) {
     try {
+      const consultLote = await this.consultarSituacaoLote.send({
+        Prestador: {
+          Cnpj: event.data.cnpj,
+          InscricaoMunicipal: event.data.inscricaoMunicipal,
+        },
+        Protocolo: event.rpsProtocol,
+      });
+
+      console.log('Consulta Lote', JSON.stringify(consultLote, null, 2));
       //para teste, comentar a linha abaixo e adicionar um mock de retorno
       console.log('is trying to consult');
       const result = (await this.consultarNfsePorRps.consultarNfsePorRps(
-        data,
+        event.data,
       )) as unknown as NfseResponse;
 
       console.log('NFSe processada com sucesso', result);

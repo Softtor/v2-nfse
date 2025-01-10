@@ -64,14 +64,14 @@ describe('ReceiveBatchRpsRepository', () => {
         {
           provide: CuritibaRepositoryImpl.RecepcionarLoteRps,
           useFactory: async (client: Client) => {
-            return new CuritibaRepositoryImpl.RecepcionarLoteRps(client);
+            return new CuritibaRepositoryImpl.RecepcionarLoteRps();
           },
           inject: [Client, EnvConfigService],
         },
         {
           provide: CuritibaRepositoryImpl.ConsultarSituacaoLoteRps,
           useFactory: async (client: Client) => {
-            return new CuritibaRepositoryImpl.ConsultarSituacaoLoteRps(client);
+            return new CuritibaRepositoryImpl.ConsultarSituacaoLoteRps();
           },
           inject: [Client],
         },
