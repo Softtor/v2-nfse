@@ -1,12 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { NotFoundError } from '@/shared/domain/errors/not-found-error';
+import { WsRps } from '@/nfse/infrastructure/repositories/soap/mappers/rps.mapper';
 
 @Injectable()
 export class BatchRpsService {
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
-  async getPendingRps(): Promise<any[]> {
+  async getPendingRps(): Promise<{
+    data: WsRps[];
+    providerId: string;
+    rpsId: string;
+  }> {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
@@ -16,35 +21,42 @@ export class BatchRpsService {
       'fiscal-rps.findAllByCreatedAt',
       now,
     );
-    const flattenedRps = rpsArray[0].flat();
-
+    const flattenedRps = rpsArray[0];
+    console.log('flattenedRps', flattenedRps);
     return flattenedRps;
   }
 
   async updateRpsBatchAssociations(
-    rpsArray: any[],
+    rpsArray: WsRps[],
     batchId: string,
     sentAt: Date,
   ): Promise<void> {
     for (const rps of rpsArray) {
+      const [rpsData] = await this.eventEmitter.emitAsync(
+        'fiscal-rps.get.byNumber',
+        rps.Rps.InfRps.IdentificacaoRps.Numero,
+      );
       const updateDto = {
-        id: rps.rpsId,
+        id: rpsData.id,
         batchId: batchId,
         issueDateRps: sentAt,
         confirmedSentWs: true,
       };
-
       await this.eventEmitter.emitAsync('fiscal-rps.update', updateDto);
     }
   }
 
   async updateRpsBatchIdAssociations(
-    rpsArray: any[],
+    rpsArray: WsRps[],
     batchId: string,
   ): Promise<void> {
     for (const rps of rpsArray) {
+      const [rpsData] = await this.eventEmitter.emitAsync(
+        'fiscal-rps.get.byNumber',
+        rps.Rps.InfRps.IdentificacaoRps.Numero,
+      );
       const updateDto = {
-        id: rps.rpsId,
+        id: rpsData.id,
         batchId: batchId,
       };
       await this.eventEmitter.emitAsync('fiscal-rps.update', updateDto);

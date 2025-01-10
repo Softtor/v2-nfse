@@ -25,6 +25,7 @@ export class FiscalRpsListener {
 
   @OnEvent('fiscal-rps.update')
   async handleFiscalRpsUpdateEvent(dto: UpdateFiscalRpsDTO) {
+    console.log('dto fiscal-rps.update', dto);
     const updatedRps = await this.updateFiscalRpsUseCase.execute(dto);
     return updatedRps;
   }

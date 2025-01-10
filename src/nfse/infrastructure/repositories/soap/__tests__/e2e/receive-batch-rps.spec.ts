@@ -64,14 +64,14 @@ describe('ReceiveBatchRpsRepository', () => {
         {
           provide: CuritibaRepositoryImpl.RecepcionarLoteRps,
           useFactory: async (client: Client) => {
-            return new CuritibaRepositoryImpl.RecepcionarLoteRps();
+            return new CuritibaRepositoryImpl.RecepcionarLoteRps(client);
           },
           inject: [Client, EnvConfigService],
         },
         {
           provide: CuritibaRepositoryImpl.ConsultarSituacaoLoteRps,
           useFactory: async (client: Client) => {
-            return new CuritibaRepositoryImpl.ConsultarSituacaoLoteRps();
+            return new CuritibaRepositoryImpl.ConsultarSituacaoLoteRps(client);
           },
           inject: [Client],
         },
@@ -103,7 +103,7 @@ describe('ReceiveBatchRpsRepository', () => {
 
   it('should consult batch situation', async () => {
     const result = await consultLoteRps.send({
-      Protocolo: '638720679483537739',
+      Protocolo: '638721280586084009',
       Prestador: {
         Cnpj: '46204900000151',
         InscricaoMunicipal: '010112006414',

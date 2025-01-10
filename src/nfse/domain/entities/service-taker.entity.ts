@@ -22,6 +22,8 @@ export class ServiceTakerEntity extends Entity<ServiceTakerProps> {
     const validator = ServiceTakerEntityValidatorFactory.create();
     const isValid = validator.validate(this.props);
     if (!isValid) {
+      console.error(validator.errors);
+
       throw new EntityValidationError(validator.errors);
     }
   }

@@ -41,9 +41,24 @@ export class NfseBatchListener {
         },
         Protocolo: event.rpsProtocol,
       });
+      console.log(
+        'erro?',
+        consultLote.ConsultarLoteRpsResult?.ListaMensagemRetorno
+          ?.MensagemRetorno,
+      );
+      if (
+        consultLote.ConsultarLoteRpsResult?.ListaMensagemRetorno
+          ?.MensagemRetorno
+      ) {
+        console.error(
+          'Error ao consultar Lote',
+          JSON.stringify(consultLote, null, 2),
+        );
+        throw new BadRequestError(
+          'Erro ao consultar Lote: ' + JSON.stringify(consultLote, null, 2),
+        );
+      }
 
-      console.log('Consulta Lote', JSON.stringify(consultLote, null, 2));
-      //para teste, comentar a linha abaixo e adicionar um mock de retorno
       console.log('is trying to consult');
       const result = (await this.consultarNfsePorRps.consultarNfsePorRps(
         event.data,

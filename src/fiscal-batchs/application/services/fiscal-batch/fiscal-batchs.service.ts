@@ -8,6 +8,7 @@ import { BatchProviderService } from './fiscal-batch-provider.service';
 import { BatchNotProcessService } from './fiscal-betch-not-process.service';
 import { BadRequestError } from '@/shared/domain/errors/bad-request-error';
 import { FiscalBatchNfseEntity } from '../../../domain/entities/fiscal-bach.entity';
+import { WsRps } from '@/nfse/infrastructure/repositories/soap/mappers/rps.mapper';
 
 interface ProviderData {
   id: string;
@@ -54,20 +55,21 @@ export class FiscalBatchService {
   }
 
   private async createAndProcessNewBatch(): Promise<void> {
-    const rpsArray = await this.rpsService.getPendingRps();
-    if (rpsArray.length === 0) return;
+    const rpsData = await this.rpsService.getPendingRps();
+    if (rpsData.data.length === 0) return;
 
-    const newBatch = await this.batchService.createBatch(
-      rpsArray[0].providerId,
+    const newBatch = await this.batchService.createBatch(rpsData.providerId);
+    await this.rpsService.updateRpsBatchIdAssociations(
+      rpsData.data,
+      newBatch.id,
     );
-    await this.rpsService.updateRpsBatchIdAssociations(rpsArray, newBatch.id);
 
     const providerSoap = await this.providerService.fetchProviderData(
-      rpsArray[0].providerId,
+      rpsData.providerId,
     );
     const batchSoap = this.prepareBatchSoap(
       newBatch.name,
-      rpsArray,
+      rpsData.data,
       providerSoap,
     );
 
@@ -76,14 +78,14 @@ export class FiscalBatchService {
       batchSoap,
     );
     await this.rpsService.updateRpsBatchAssociations(
-      rpsArray,
+      rpsData.data,
       newBatch.id,
       newBatch.sentAt,
     );
     console.log('Novo lote criado e processado com sucesso.');
     console.log('Consultando eventos de lote...');
     setTimeout(() => {
-      this.emitConsultEvents(rpsArray, createdBatch);
+      this.emitConsultEvents(rpsData.data, createdBatch);
     }, 60000);
   }
 
@@ -100,7 +102,7 @@ export class FiscalBatchService {
   }
 
   private emitConsultEvents(
-    rpsArray: any[],
+    rpsArray: WsRps[],
     createdBatch: FiscalBatchNfseEntity,
   ): void {
     for (const rps of rpsArray) {
