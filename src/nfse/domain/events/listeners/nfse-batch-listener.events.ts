@@ -5,12 +5,14 @@ import { CuritibaRepositoryImpl } from '@/nfse/infrastructure/repositories/soap/
 import { ReceiveBatchRpsInterface } from '../../interfaces/receive-batch-rps.interface';
 import { ConsultNfseByRpsInput } from '../../interfaces/consult-nfse-by-rps-input.interface';
 import { NfseResponse } from '../../interfaces/nfse.interface';
+import { ConsultBatchSituationInterface } from '../../interfaces/consult-batch-situation.interface';
 
 @Injectable()
 export class NfseBatchListener {
   constructor(
     private readonly recepcionarLoteRps: CuritibaRepositoryImpl.RecepcionarLoteRps,
     private readonly consultarNfsePorRps: CuritibaRepositoryImpl.ConsultarNfsePorRps,
+    private readonly consultarSituacaoLote: CuritibaRepositoryImpl.ConsultarSituacaoLoteRps,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -28,11 +30,11 @@ export class NfseBatchListener {
   }
 
   @OnEvent('fiscal-nfse.consult')
-  async handlerConsultNfseEvent(data: ConsultNfseByRpsInput) {
+  async handlerConsultLoteSituationEvent(data: ConsultBatchSituationInterface) {
     try {
       //para teste, comentar a linha abaixo e adicionar um mock de retorno
       console.log('is trying to consult');
-      const result = (await this.consultarNfsePorRps.consultarNfsePorRps(
+      const result = (await this.consultarSituacaoLote.send(
         data,
       )) as unknown as NfseResponse;
 

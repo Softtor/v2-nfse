@@ -7,6 +7,7 @@ import { BatchProcessService } from './fiscal-batch-process.service';
 import { BatchProviderService } from './fiscal-batch-provider.service';
 import { BatchNotProcessService } from './fiscal-betch-not-process.service';
 import { BadRequestError } from '@/shared/domain/errors/bad-request-error';
+import { FiscalBatchNfseEntity } from '../../../domain/entities/fiscal-bach.entity';
 
 interface ProviderData {
   id: string;
@@ -70,7 +71,10 @@ export class FiscalBatchService {
       providerSoap,
     );
 
-    await this.batchNotProcessService.processBatch(newBatch, batchSoap);
+    const createdBatch = await this.batchNotProcessService.processBatch(
+      newBatch,
+      batchSoap,
+    );
     await this.rpsService.updateRpsBatchAssociations(
       rpsArray,
       newBatch.id,
@@ -79,7 +83,7 @@ export class FiscalBatchService {
     console.log('Novo lote criado e processado com sucesso.');
     console.log('Consultando eventos de lote...');
     setTimeout(() => {
-      this.emitConsultEvents(rpsArray);
+      this.emitConsultEvents(rpsArray, createdBatch);
     }, 60000);
   }
 
@@ -95,14 +99,17 @@ export class FiscalBatchService {
     );
   }
 
-  private emitConsultEvents(rpsArray: any[]): void {
+  private emitConsultEvents(
+    rpsArray: any[],
+    createdBatch: FiscalBatchNfseEntity,
+  ): void {
     for (const rps of rpsArray) {
       const consultData = {
-        numero: rps.Rps.InfRps.IdentificacaoRps.Numero,
-        serie: rps.Rps.InfRps.IdentificacaoRps.Serie,
-        tipo: parseInt(rps.Rps.InfRps.IdentificacaoRps.Tipo, 10),
-        cnpj: rps.Rps.InfRps.Prestador.Cnpj,
-        inscricaoMunicipal: rps.Rps.InfRps.Prestador.InscricaoMunicipal,
+        Prestador: {
+          Cnpjs: rps.Rps.InfRps.Prestador.Cnpj,
+          InscricaoMunicipal: rps.Rps.InfRps.Prestador.InscricaoMunicipal,
+        },
+        Protocolo: createdBatch.protocol,
       };
       try {
         this.eventEmitter.emit('fiscal-nfse.consult', consultData);

@@ -14,7 +14,7 @@ export class BatchNotProcessService {
   async processBatch(
     batch: FiscalBatchNfseEntity,
     batchSoap: any,
-  ): Promise<boolean> {
+  ): Promise<any> {
     try {
       const response = await this.eventEmitter.emitAsync(
         'fiscal-batch.create',
@@ -34,7 +34,7 @@ export class BatchNotProcessService {
       await this.fiscalBatchRepository.update(batch);
 
       console.log('Lote processado com sucesso');
-      return true;
+      return result as FiscalBatchNfseEntity;
     } catch (error) {
       console.error('Erro ao processar o lote: ', error);
 
