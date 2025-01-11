@@ -14,13 +14,13 @@ export async function main() {
   await seedFiscalProvider();
   await seedFiscalNfConfig();
   await seedFiscalServices();
+  await seedFiscalNfse();
 
   if (process.env.NODE_ENV === 'development') {
     console.log('Running development seeders...');
     await seedFiscalTakers();
     await seedFiscalBatchsRps();
     await seedFiscalRps();
-    await seedFiscalNfse();
   } else {
     console.log(
       'Skipping development seeders because NODE_ENV is not "development".',

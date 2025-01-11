@@ -22,7 +22,6 @@ export class BatchRpsService {
       sevenDaysAgo,
     );
     const flattenedRps = rpsArray[0];
-    console.log('flattenedRps', flattenedRps);
     return flattenedRps;
   }
 
